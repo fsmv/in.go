@@ -13,7 +13,7 @@ import (
   "fmt"
   "flag"
   "time"
-  "strings"
+  "bytes"
 )
 
 var (
@@ -30,7 +30,9 @@ const (
 
 const ClearLine = "\033[K" // ESC[K, the ECMA-48 CSI code for Erase line. See man 4 console_codes
 
-func progressbar(elapsed, total int64) string {
+var bar bytes.Buffer
+
+func progressbar(elapsed, total int64) []byte {
   realBarLen := *BarLen-2 // to account for the [ and ]
 
   // Solve for progress: total / BarLen = elapsed / progress
@@ -40,16 +42,16 @@ func progressbar(elapsed, total int64) string {
     os.Exit(2)
   }
 
-  var b strings.Builder
-  b.WriteRune('[')
+  bar.Reset()
+  bar.WriteRune('[')
   for i := 0; i < progress; i+=1 {
-    b.WriteRune(BarFilled)
+    bar.WriteRune(BarFilled)
   }
   for i := 0; i < (realBarLen - progress); i+=1 {
-    b.WriteRune(BarEmpty)
+    bar.WriteRune(BarEmpty)
   }
-  b.WriteRune(']')
-  return b.String()
+  bar.WriteRune(']')
+  return bar.Bytes()
 }
 
 func main() {
