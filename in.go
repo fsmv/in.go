@@ -70,11 +70,16 @@ func main() {
     fmt.Fprintln(os.Stderr, "Invalid duration:", args[0])
     os.Exit(1)
   }
-  for elapsed := 0*time.Second; elapsed < sleeptime; elapsed += *Step {
+  start := time.Now()
+  for elapsed := 0*time.Second; elapsed < sleeptime; elapsed = time.Since(start) {
     fmt.Fprintf(os.Stderr, "\r%s %v/%v%s",
       progressbar(elapsed.Milliseconds(), sleeptime.Milliseconds()),
-      elapsed, sleeptime, ClearLine)
-    time.Sleep(*Step)
+      elapsed.Truncate(*Step), sleeptime, ClearLine)
+    if remaining := sleeptime - elapsed; remaining < *Step {
+      time.Sleep(remaining)
+    } else {
+      time.Sleep(*Step)
+    }
   }
   fmt.Fprintf(os.Stderr, "\rDing!%s\n", ClearLine)
 }
