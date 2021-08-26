@@ -32,16 +32,16 @@ const ClearLine = "\033[K" // ESC[K, the ECMA-48 CSI code for Erase line. See ma
 
 var bar bytes.Buffer
 
-func progressbar(elapsed, total int64) []byte {
+func progressbar(elapsed, total float64) []byte {
   realBarLen := *BarLen-2 // to account for the [ and ]
-
-  // Solve for progress: total / BarLen = elapsed / progress
-  progress := int(elapsed / (total / int64(realBarLen)))
+  if realBarLen < 1 {
+    return nil // The user asked for no progress bar
+  }
+  progress := int((elapsed / total) * float64(realBarLen))
   if progress < 0 || progress > realBarLen {
     fmt.Fprintln(os.Stderr, "Bad miscaculation:", progress, elapsed, total, realBarLen)
     os.Exit(2)
   }
-
   bar.Reset()
   bar.WriteRune('[')
   for i := 0; i < progress; i+=1 {
@@ -51,6 +51,7 @@ func progressbar(elapsed, total int64) []byte {
     bar.WriteRune(BarEmpty)
   }
   bar.WriteRune(']')
+  bar.WriteRune(' ') // the space is here so we don't print it when realBarLen < 1
   return bar.Bytes()
 }
 
@@ -74,8 +75,8 @@ func main() {
   }
   start := time.Now()
   for elapsed := 0*time.Second; elapsed < sleeptime; elapsed = time.Since(start) {
-    fmt.Fprintf(os.Stderr, "\r%s %v/%v%s",
-      progressbar(elapsed.Milliseconds(), sleeptime.Milliseconds()),
+    fmt.Fprintf(os.Stderr, "\r%s%v/%v%s",
+      progressbar(elapsed.Seconds(), sleeptime.Seconds()),
       elapsed.Truncate(*Step), sleeptime, ClearLine)
     if remaining := sleeptime - elapsed; remaining < *Step {
       time.Sleep(remaining)
