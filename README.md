@@ -10,10 +10,11 @@ ssh back in when it's up.
 
 ## Installing
 
-Just run `go build in.go` and move the `in` binary into ~/bin or ~/.local/bin
+Just run `GOGC=off go build in.go` and move the `in` binary into ~/bin or ~/.local/bin
 
-You can change the constants at the top or edit the function to customize the
-appearance of the progress bar!
+Disabling the garbage collector is optional, but it's fun to do it, since this program
+only allocates a constant amount of data. If you don't disable it, it will probably still
+never be triggered to run.
 
 ## License
 
