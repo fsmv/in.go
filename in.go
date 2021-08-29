@@ -16,16 +16,13 @@ import (
 )
 
 var (
-  BarLen = flag.Int("length", 40, "The length of the progress bar (including the end chars) in characters")
   Step = flag.Duration("step", time.Second, "The amount of time between display updates")
+  BarStyle = flag.String("style", "[=-]", "The specification for the progress bar style.\nMust be exactly 4 chars {start, filled, unfilled, end}.")
+  BarLen = flag.Int("length", 40, "The length of the progress bar (including the end chars) in characters")
   durationBuffer = make([]byte, 32) // max string is "2540400h59m59.000000001"
 )
 
-const (
-  BarFilled = '='
-  BarEmpty = '-'
-  ClearLine = "\033[K" // ESC[K, the ECMA-48 CSI code for Erase line. See man 4 console_codes
-)
+const ClearLine = "\033[K" // ESC[K, the ECMA-48 CSI code for Erase line. See man 4 console_codes
 
 func writeProgressbar(bar *bytes.Buffer, elapsed, total float64) {
   realBarLen := *BarLen-2 // to account for the beginning and end chars
@@ -33,14 +30,14 @@ func writeProgressbar(bar *bytes.Buffer, elapsed, total float64) {
     return // The user asked for no progress bar
   }
   progress := int((elapsed / total) * float64(realBarLen))
-  bar.WriteRune('[')
+  bar.WriteByte((*BarStyle)[0])
   for i := 0; i < progress; i+=1 {
-    bar.WriteRune(BarFilled)
+    bar.WriteByte((*BarStyle)[1])
   }
   for i := 0; i < (realBarLen - progress); i+=1 {
-    bar.WriteRune(BarEmpty)
+    bar.WriteByte((*BarStyle)[2])
   }
-  bar.WriteString("] ") // the space is here so we don't print it when realBarLen < 1
+  bar.Write([]byte{(*BarStyle)[3],' '}) // the space is here so we don't print it when realBarLen < 1
 }
 
 func writeTimeUnit(out *bytes.Buffer, val *int64, unit time.Duration, label byte) {
@@ -68,6 +65,10 @@ func main() {
     flag.PrintDefaults()
   }
   flag.Parse()
+  if len(*BarStyle) != 4 {
+    fmt.Fprintln(os.Stderr, "Invalid style argument, must be exactly 4 characters")
+    os.Exit(1)
+  }
   args := flag.Args()
   if len(args) == 0 {
     flag.Usage()
