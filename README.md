@@ -19,6 +19,14 @@ never be triggered to run.
 ## License
 
 Released under the Apache 2.0 License, which is a permissive license so use and
-fork as desired. Technically Google owns the copyright since I work there and I
-decided to release this under the "below 100 lines" policy that allows me to use
-the Apache license without explicit approval.
+fork as desired. While the copyright is owned by Google (because I work there).
+
+This is not an official Google product, it is my personal project. Google
+disclaims all warranties as to its quality, merchantability, or fitness for a
+particular purpose.
+
+## Contributing
+
+Please do not contribute code, only issues. In order for me to accept
+contributions you would need to sign the Google CLA and I don't think it is
+worth it for this.
