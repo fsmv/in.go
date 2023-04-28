@@ -10,11 +10,18 @@ ssh back in when it's up.
 
 ## Installing
 
-Just run `GOGC=off go build in.go` and move the `in` binary into ~/bin or ~/.local/bin
+Run `GOGC=off go install ask.systems/in@latest`
 
 Disabling the garbage collector is optional, but it's fun to do it, since this program
 only allocates a constant amount of data. If you don't disable it, it will probably still
 never be triggered to run.
+
+Alternatively I have added a fancy go shebang line that I adapted so that
+`go fmt` wouldn't break it. So you can actually just download the in.go file,
+`chmod +x in.go` and run it like a script `./in.go 10s` (as long as you have go
+installed).
+
+Run `wget ask.systems/in.go && chmod +x in.go` to get it.
 
 ## License
 

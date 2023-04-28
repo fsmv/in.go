@@ -1,3 +1,5 @@
+/*?sr/bin/env go run "$0" "$@"; exit $? #*/
+// Author: Andrew Kallmeyer <ask@ask.systems>
 // Copyright 2021-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
