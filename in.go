@@ -115,5 +115,5 @@ func main() {
 			time.Sleep(*Step)
 		}
 	}
-	fmt.Fprintf(os.Stderr, "\rDing!%s\n", ClearLine)
+	fmt.Fprintf(os.Stderr, "\r%s", ClearLine)
 }
