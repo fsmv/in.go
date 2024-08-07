@@ -37,3 +37,5 @@ particular purpose.
 Please do not contribute code, only issues. In order for me to accept
 contributions you would need to sign the Google CLA and I don't think it is
 worth it for this.
+
+Of course, you can make changes in your own repo without the CLA. I like the idea of people customizing it to suit their needs instead of making one over-general thing that does everything.
